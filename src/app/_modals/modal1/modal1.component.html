@@ -1,0 +1,13 @@
+<div id="modal-content-wrapper">
+  <header id="modal-header">   
+      <h1 id="modal-title">{{"You have been challenged by " + data.name + "!"}}</h1>
+  </header>
+  <section id="modal-body">
+      <p>You can accept or reject the challenge or just close this window.</p>
+  </section>
+  <footer id="modal-footer">
+      <button mat-raised-button id="modal-button" (click)="acceptChallenge(data.name)">Accept</button>
+      <button mat-raised-button id="modal-button" (click)="rejectChallenge(data.name)">Reject</button>
+      <button mat-raised-button id="modal-button" (click)="closeModal()">Close</button>
+  </footer>
+</div> 

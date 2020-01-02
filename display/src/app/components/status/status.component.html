@@ -1,0 +1,33 @@
+<div id="mainrow">
+  <div class="row">
+    <div class="message-side small-2 text-center col">
+      <div class="center-vertical">press button to start</div>
+    </div>
+    <div class="small-6 small-offset-1 text-center col">
+      <div class="row">
+          <div class="score small-5 col text-center">
+            <div class="row">
+              <div class="score small-6 col text-center">{{wuzzlerService.game.red}}</div>
+              <div class="score small-6 col text-center">:</div>
+              <div class="score small-6 col text-center">{{wuzzlerService.game.blue}}</div>
+            </div>
+          </div>
+      </div> 
+      <div class="row">
+        <div (click)="wuzzlerService.playerReady('red')" [ngClass]="{'greenFrame': wuzzlerService.game.red_ready}" id="name-red" class="name small-5 col border-4">{{wuzzlerService.game.red_name}}</div>
+        <div (click)="wuzzlerService.playerReady('blue')" [ngClass]="{'greenFrame': wuzzlerService.game.blue_ready}" id="name-blue" class="name small-offset-2 small-5 col border-4">{{wuzzlerService.game.blue_name}}</div>
+      </div>
+    </div>
+    <div class="message-side small-2 text-center col">
+      <div class="center-vertical">press button to start</div>
+      <div class="center-vertical"></div>
+    </div>
+  </div> 
+  <div class="row container container" id="gamestatus">
+      <span>{{wuzzlerService.game.status}}</span>
+    </div>
+  <div class="row container">
+    <button (click)="wuzzlerService.goal('red')">Goal red</button>
+    <button (click)="wuzzlerService.goal('blue')">Goal blue</button>
+  </div>
+</div>

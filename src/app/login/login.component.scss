@@ -1,0 +1,41 @@
+.LoginWrapper {
+  background: url("../../assets/the-ball-488714_960_720.jpg");
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  height: 100vh;
+  width: 100vw;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  background-position: center;
+
+  .FormWrapper {
+    @media (max-width: 679px) {
+      width: 75%;
+    }
+    background: #cccccca6;
+    padding: 3rem;
+    border: 1px solid #ccc;
+    border-radius: 1rem;
+ 
+    h2 {
+      text-align: center;
+      margin: 0 0 2rem;
+      font-weight: 300;
+      color: #4e4e4e;
+    }
+  }
+}
+
+.loginBtn {
+  background: #929292 !important;
+  border-color: #ccc !important;
+  font-weight: 400 !important;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background: #615e5e !important;
+  }
+}

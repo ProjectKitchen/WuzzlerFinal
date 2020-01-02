@@ -1,0 +1,40 @@
+<div class="LoginWrapper">
+  <div class="FormWrapper">
+    <h2>Login</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="authenticationService.login(loginForm.value)">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          formControlName="username"
+          placeholder="Enter Username"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
+        />
+        <!--   <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+            <div *ngIf="f.username.errors.required">Username is required</div>
+        </div> -->
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="Enter Password"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+        /> 
+        <!-- <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+            <div *ngIf="f.password.errors.required">Password is required</div>
+        </div> -->
+      </div>
+      <div class="form-group">
+        <button [disabled]="loading" class="btn btn-primary loginBtn">
+          <!--  <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span> -->
+          Login
+        </button>
+        <a routerLink="/register" class="btn btn-link">Register</a>
+      </div>
+    </form>
+  </div>
+</div>

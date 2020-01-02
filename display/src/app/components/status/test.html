@@ -1,0 +1,63 @@
+<div class="container">
+  <div class="row">
+    <div class="message-side small-2 text-center columns">
+      <div class="center-vertical">press button to start</div>
+      <div class="center-vertical" ></div>
+    </div>
+    <div class="small-6 small-offset-1 text-center columns">
+      <div class="row">
+        <div class="row">
+          <div class="score small-5 columns text-center">
+            <div class="row">
+              <div class="score small-6 columns text-center">
+                test
+              </div> 
+              <div class="score small-6 columns text-center">
+               test
+              </div>
+            </div>
+          </div>
+          <div class="score small-2 columns text-center">:</div>
+          <div class="score small-5 columns text-center">
+            <div class="row">
+              <div class="score small-6 columns text-center">
+               test
+              </div>
+              <div class="score small-6 columns text-center">
+                test
+              </div> 
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div id="name-blue" class="name small-5 columns">
+          test
+        </div>
+        <div id="name-red"class="name small-offset-2 small-5 columns">
+          test
+        </div>
+      </div>
+    </div>
+    <div class="message-side small-2 text-center columns">
+      <div class="center-vertical">press button to start</div>
+      <div class="center-vertical"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="message-lower columns text-center">
+      <div class="center-vertical">GameOver</div>
+      <div class="center-vertical">Have Fun </div>
+      <div class="center-vertical">waiting for Players</div>
+      <div class="center-vertical">press any button</div>
+      <div class="center-vertical">press red to revoke</div>
+      <div class="center-vertical">press blue to revoke</div>
+      <div class="center-vertical">press blue to abort game</div>
+      <div class="center-vertical">press red to abort game</div>
+    </div>
+  </div>
+</div>
+
+
+<div (click)="wuzzlerService.playerReady('red')" [ngClass]="{'greenFrame': wuzzlerService.game.blue_ready}" id="name-blue" class="name small-5 col">{{wuzzlerService.games[0].red}}</div>
+<div (click)="wuzzlerService.playerReady('blue')" [ngClass]="{'greenFrame': wuzzlerService.game.red_ready}" id="name-red" class="name small-offset-2 small-5 col">{{wuzzlerService.games[0].blue}}</div(click)="playerReady('red')">

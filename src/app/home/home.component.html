@@ -1,0 +1,32 @@
+<h2 (click)="openModal1('hey')"  style="text-align: center; padding-top: 1rem;">Welcome to Wuzzler App!</h2>
+
+<div class="container-fluid">
+  <div class="wrapper">
+    <p id="myp" class="wrapperHeading">Upcoming games:<br /></p>
+    <p class="wrapperSubHeading">(Tap to Cancel)<br /></p>
+    <ul class="list">
+      <li *ngFor="let game of challengeService.games" class="upcomingGames">{{game.red}} vs. {{game.blue}}</li>
+    </ul>
+  </div>
+  <div class="wrapper">
+    <p class="wrapperHeading">Challenged by:<br /></p>
+    <p class="wrapperSubHeading">(Tap to Accept or Reject)<br /></p>
+    <ul class="list">
+      <li (click)="openModal1($event.target.textContent)"  *ngFor="let chruser of challengeService.challengedBy" class="upcomingGames">{{chruser}}</li>
+    </ul>
+  </div>
+  <div class="wrapper">
+    <p class="wrapperHeading">Available Users:<br /></p>
+    <p class="wrapperSubHeading">(Tap to Challenge)<br /></p>
+    <ul class="list">
+      <li (click)="challengeService.addChallenge($event.target.textContent)" *ngFor="let user of getAvailableUsers(authenticationService.allUsers, authenticationService.currentUser)">{{user}}</li>
+    </ul>
+  </div>
+  <div class="wrapper">
+    <p class="wrapperHeading">Challenged Users:<br /></p>
+    <p class="wrapperSubHeading">(Tap to Cancel)</p>
+    <ul class="list">
+      <li (click)="challengeService.cancelChallenge($event.target.textContent)" *ngFor="let chuser of challengeService.challenged" class="challenge">{{chuser}}</li>
+    </ul>
+  </div>
+</div>

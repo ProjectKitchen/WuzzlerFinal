@@ -1,0 +1,19 @@
+<div id="mainrow">
+  <div class="container">
+    <div></div>
+    <table class="table bg-info">   
+      <thead>
+        <tr>
+          <th *ngFor="let name of getColNames(this.wuzzlerService.top10)">{{name}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rowdata of this.wuzzlerService.top10">
+          <td *ngFor="let colname of getColNames(this.wuzzlerService.top10)">{{rowdata[colname]}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <div></div>
+  </div>
+</div>
+  
