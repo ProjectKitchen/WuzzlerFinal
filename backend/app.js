@@ -27,7 +27,7 @@ let connectionID = 0;
 let activeUsers = {};
 
 io.on('connection', socket => {
-  connectionID += 1;5
+  connectionID += 1;
   socketEcho('connection', connectionID, 'IN');
 
   socketEcho('survey', surveyID, 'OUT');

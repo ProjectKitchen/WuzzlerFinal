@@ -24,6 +24,8 @@
     "@angular/platform-browser": "~8.2.0",
     "@angular/platform-browser-dynamic": "~8.2.0",
     "@angular/router": "~8.2.0",
+    "@types/jquery": "^3.3.31",
+    "@types/jsdom": "^12.2.4",
     "bootstrap": "^4.4.1",
     "engine.io": "^3.4.0",
     "jquery": "^3.4.1",

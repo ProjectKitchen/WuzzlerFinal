@@ -12,7 +12,7 @@
     <p class="wrapperHeading">Challenged by:<br /></p>
     <p class="wrapperSubHeading">(Tap to Accept or Reject)<br /></p>
     <ul class="list">
-      <li (click)="openModal1($event.target.textContent)"  *ngFor="let chruser of challengeService.challengedBy" class="upcomingGames">{{chruser}}</li>
+      <li (click)="openModal1($event.target.textContent)"  *ngFor="let chruser of challengeService.challengedBy" class="challengeBy">{{chruser}}</li>
     </ul>
   </div>
   <div class="wrapper">
