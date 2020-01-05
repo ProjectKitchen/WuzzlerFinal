@@ -2,7 +2,6 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ChallengeService } from 'src/app/_services/challengeService/challenge.service';
-import { AuthenticationService } from 'src/app/_services/authenticationService/authentication.service';
   
 @Component({
   selector: 'app-modal1',
@@ -15,7 +14,6 @@ export class Modal1Component implements OnInit {
     public dialogRef: MatDialogRef<Modal1Component>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private challengeService: ChallengeService,
-    private authenticationService: AuthenticationService
   ) { }
 
   ngOnInit() {

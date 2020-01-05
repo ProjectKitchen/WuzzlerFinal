@@ -5,7 +5,7 @@
     <p id="myp" class="wrapperHeading">Upcoming games:<br /></p>
     <p class="wrapperSubHeading">(Tap to Cancel)<br /></p>
     <ul class="list">
-      <li *ngFor="let game of challengeService.games" class="upcomingGames">{{game.red}} vs. {{game.blue}}</li>
+      <li (click)="challengeService.cancelGame($event.target.textContent)" *ngFor="let game of challengeService.games" class="upcomingGames">{{game.red}} vs. {{game.blue}}</li>
     </ul>
   </div>
   <div class="wrapper">

@@ -78,9 +78,9 @@ io.on('connection', socket => {
 
   socket.on('disconnect', (a) => {
     socketEcho('disconnect', null, 'IN');
-    surveyID += 1;
     socketEcho('survey', surveyID, 'OUT');
     io.sockets.emit('survey', surveyID);
+    surveyID += 1;
   })
 
   socket.on('surveyResponse', data => {
@@ -133,7 +133,7 @@ io.on('connection', socket => {
 
   socket.on('addChallenge', data => {
     socketEcho('addChallenge', data, 'IN');
-    challengeM.addCHallenge(data);
+    challengeM.addChallenge(data);
     socketEcho('challengeUpdate', challengeM.getData(), 'OUT');
     io.sockets.emit('challengeUpdate', challengeM.getData());
   })
@@ -191,6 +191,20 @@ io.on('connection', socket => {
   socket.on('playerReady', data => {
     socketEcho('playerReady', data, 'IN');
     gameM.playerReady(data);
+    socketEcho('gameUpdate', gameM.getGame(), 'OUT');
+    io.sockets.emit('gameUpdate', gameM.getGame());
+  })
+
+  socket.on('cancelGame', data => {
+    socketEcho('cancelGame', data, 'IN');
+    let ngames = challengeM.removeGameByPlayers(data);
+    if(ngames === 0) {
+      gameM.resetGame();
+    } else {
+      gameM.setGame(challengeM.getData().upcomingGames[0].red, challengeM.getData().upcomingGames[0].blue)
+    }
+    socketEcho('challengeUpdate', challengeM.getData(), 'OUT');
+    io.sockets.emit('challengeUpdate', challengeM.getData());
     socketEcho('gameUpdate', gameM.getGame(), 'OUT');
     io.sockets.emit('gameUpdate', gameM.getGame());
   })

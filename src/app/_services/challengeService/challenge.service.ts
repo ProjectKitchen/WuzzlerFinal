@@ -81,4 +81,10 @@ export class ChallengeService {
     this.socketService.emit('rejectChallenge', challengeData)
   }
 
+  cancelGame(gametext: string){
+    const gameinfo = gametext.split(' vs. ');
+    let game = {red: gameinfo[0], blue: gameinfo[1]};
+    this.socketService.emit('cancelGame', game)
+  }
+
 }

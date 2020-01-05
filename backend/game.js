@@ -37,7 +37,7 @@ function init() {
   }
 
   function setGame(red_name, blue_name){
-    if(game.status === gameStates.nogame || game.status === gameStates.top10updated || game.status === gameStates.waiting) {
+    if(game.status === gameStates.playing  || game.status === gameStates.nogame || game.status === gameStates.top10updated || game.status === gameStates.waiting) {
       game = Object.assign({}, reset, {red_name, blue_name, status: gameStates.waiting});
     }
   }
@@ -62,11 +62,15 @@ function init() {
       game[color] += 1;
     }
     if(Math.max(game.red, game.blue) === 10 && game.status === gameStates.playing) {
-      game.status = gameStates.over;
       game.winner = (game.blue === 10) ? game.blue_name : game.red_name;
-      game.status = 'The winner is ' + game.winner +  '. Top10 list has been updated.'
-      return 10
+      gameStates.over = 'The winner is ' + game.winner +  '. Top10 list has been updated.';
+      game.status = gameStates.over;
+      return 10;
     }
+    if(Math.max(game.red, game.blue) === 10 && game.status !== gameStates.playing) {
+      return 20;
+    }
+
     return 0;
   }
 

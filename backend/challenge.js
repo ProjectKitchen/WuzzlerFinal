@@ -3,7 +3,7 @@ function init() {
     let challenges = [];
     let upcomingGames = [];
   
-    function addCHallenge(challenge) {
+    function addChallenge(challenge) {
       const { challenger, challenged } = challenge;
       let notFound = true;
       challenges.forEach(item => {
@@ -58,6 +58,19 @@ function init() {
       return upcomingGames.length;
     }
   
+    function removeGameByPlayers(gameinfo){
+      let position = -1;
+    upcomingGames.forEach((item, i) => {
+      if(gameinfo.red === item.red & gameinfo.blue === item.blue) {
+        position = i;
+      }
+    })
+    if(position > -1) {
+      upcomingGames.splice(position, 1);
+    }
+    return upcomingGames.length;
+    }
+
     function removeGameByPlayer(player){
       let newgamelist = [];
       let firstslot = false;
@@ -83,12 +96,13 @@ function init() {
     }
   
     return {
-      addCHallenge: addCHallenge,
+      addChallenge: addChallenge,
       cancelChallenge: cancelChallenge,
       acceptChallenge: acceptChallenge,
       rejectChallenge: rejectChallenge,
       removeGame: removeGame,
       removeGameByPlayer: removeGameByPlayer,
+      removeGameByPlayers: removeGameByPlayers,
       getData: getData
     }
   }
