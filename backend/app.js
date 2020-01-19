@@ -179,7 +179,7 @@ io.on('connection', socket => {
      //socketEcho('goal', data, 'IN');
      let info = gameM.goal(data);
      //console.log(gameM.getGame());
-     console.log(info);
+     //console.log(info);
      //socketEcho('gameUpdate', gameM.getGame(), 'OUT');
      io.sockets.emit('gameUpdate', gameM.getGame());
      if(info.code === 10 && info.gameType === 'dummy'){
@@ -200,7 +200,7 @@ io.on('connection', socket => {
        }, 7000);
      }
      if(info.code === 10 && info.gameType === 'regular'){
-       gameM.finishGame(info.gameType);
+      gameM.finishGame(info.gameType);
       setTimeout(() => {
         let ngames = challengeM.removeGame();
         if(ngames > 0){
@@ -208,9 +208,15 @@ io.on('connection', socket => {
         } else {
           gameM.resetGame();
         }
-        socketEcho('gameUpdate', gameM.getGame(), 'OUT');
+        db.getTop10('all', res => {
+          if(res.message === 'OK') {
+            socketEcho('top10update', res.data, 'OUT');
+            io.sockets.emit('top10update', res.data);
+          }
+        })
+       // socketEcho('gameUpdate', gameM.getGame(), 'OUT');
         io.sockets.emit('gameUpdate', gameM.getGame());
-        socketEcho('challengeUpdate', challengeM.getData(), 'OUT');
+       // socketEcho('challengeUpdate', challengeM.getData(), 'OUT');
         io.sockets.emit('challengeUpdate', challengeM.getData());
       }, 7000);
     }

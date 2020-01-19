@@ -20,7 +20,7 @@ var robot = Cylon.robot({
   },
 
   work: function() {
-    every((0.5).second(), function() {
+    every((3).second(), function() {
       const goal = ['red', 'blue'];
       const color = goal[Math.floor(Math.random() * Math.floor(2))];
       socket.emit('goal',color);
