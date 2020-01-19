@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
       if(item.blue === me) {playersInGames.push(item.red)};
     })
     userlist.forEach(item=>{
-      if(item!==me && !this.challengeService.challenged.includes(item) && !playersInGames.includes(item)){
+      if(item!==me && !this.challengeService.challenged.includes(item) && !playersInGames.includes(item) && !this.challengeService.challengedBy.includes(item)){
         results.push(item);
       }
     })

@@ -1,6 +1,7 @@
 const db=require('./db').init();
 const gameM = require('./game').init();
 const challengeM = require('./challenge').init();
+const robot = require('./robot');
 
 const cors = require('cors');
 const express = require('express');
@@ -12,6 +13,14 @@ app.use(cors());
 const server = http.createServer(app);
 const io = socketIO(server);
 io.origins('*:*');
+
+const gameStates = {
+  waiting: 'Waiting to start the game.',
+  nogame: 'There is no game waiting.',
+  playing: 'Game in progress!',
+  over: 'Game is over!',
+  top10updated: 'Top10 list has been updated.'
+};
 
 function socketEcho(eventName, data, type) {
   let txt = (type === 'IN') ? '" received with the following data:' : '" emitted with the following data:';
@@ -148,7 +157,7 @@ io.on('connection', socket => {
   socket.on('acceptChallenge', data => {
     socketEcho('acceptChallenge', data, 'IN');
     let ngames = challengeM.acceptChallenge(data);
-    if(ngames === 1) {
+    if(ngames === 1 && gameM.getGame().status === gameStates.nogame) {
       gameM.setGame(data.challenger, data.challenged);
     }
 
@@ -167,12 +176,31 @@ io.on('connection', socket => {
   })
 
   socket.on('goal', data => {
-    socketEcho('goal', data, 'IN');
-    let ngoals = gameM.goal(data);
-    socketEcho('gameUpdate', gameM.getGame(), 'OUT');
-    io.sockets.emit('gameUpdate', gameM.getGame()); 
-    if(ngoals === 10){
-      gameM.finishGame();
+     //socketEcho('goal', data, 'IN');
+     let info = gameM.goal(data);
+     //console.log(gameM.getGame());
+     console.log(info);
+     //socketEcho('gameUpdate', gameM.getGame(), 'OUT');
+     io.sockets.emit('gameUpdate', gameM.getGame());
+     if(info.code === 10 && info.gameType === 'dummy'){
+       console.log('got here')
+       gameM.finishGame(info.gameType);
+       setTimeout(() => {
+         let ngames = challengeM.getData().upcomingGames.length;
+         console.log(ngames);
+         if(ngames === 0) {
+           gameM.resetGame();
+         } else {
+           gameM.setGame(challengeM.getData().upcomingGames[0].red, challengeM.getData().upcomingGames[0].blue);
+         }
+         // socketEcho('gameUpdate', gameM.getGame(), 'OUT');
+         io.sockets.emit('gameUpdate', gameM.getGame());
+         // socketEcho('challengeUpdate', challengeM.getData(), 'OUT');
+         io.sockets.emit('challengeUpdate', challengeM.getData());
+       }, 7000);
+     }
+     if(info.code === 10 && info.gameType === 'regular'){
+       gameM.finishGame(info.gameType);
       setTimeout(() => {
         let ngames = challengeM.removeGame();
         if(ngames > 0){
@@ -219,6 +247,12 @@ io.on('connection', socket => {
     })
   });
 });
+
+console.log('starting robot');
+robot.start();
+console.log('robot started');
+
+
 
 server.listen(4444, function(){
   console.log('listening on *:4444');

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from "rxjs";
 import { SocketService } from '../socketService/socket.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,8 @@ export class WuzzlerService {
   }; 
 
   constructor(
-    private socketService: SocketService
+    private socketService: SocketService,
+    private router: Router
   ) {
 
     let initGamesValue = (localStorage.getItem("games")) ? JSON.parse(localStorage.getItem("games")) : this.games;
@@ -60,6 +62,10 @@ export class WuzzlerService {
     this.socketService.listen("top10update").subscribe( res => {
       this.top10Subject.next(res);
       localStorage.setItem('top10', JSON.stringify(res));
+      this.router.navigateByUrl('/top10');
+      setTimeout(() => {
+        this.router.navigateByUrl('/');
+      }, 5000)
     });
 
   }

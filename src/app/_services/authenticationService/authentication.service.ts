@@ -58,10 +58,11 @@ export class AuthenticationService {
     })
 
     this.socketService.listen('registerResponse').subscribe( res => {
-      if(res.message !== 'OK') {
-        alert('Error encounterd when communicating with the user database.')
-      } else {
+      if(res.message == 'OK') {
         alert('Registration successfull');
+        this.router.navigateByUrl('/login');
+      } else {
+        alert('Username already taken');
       }
     })
 

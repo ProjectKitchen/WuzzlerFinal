@@ -4,9 +4,9 @@ function init() {
 
   const gameStates = {
     waiting: 'Waiting to start the game.',
+    nogame: 'There is no game waiting.',
     playing: 'Game in progress!',
     over: 'Game is over!',
-    nogame: 'There is no game waiting.',
     top10updated: 'Top10 list has been updated.'
   };
 
@@ -37,9 +37,7 @@ function init() {
   }
 
   function setGame(red_name, blue_name){
-    if(game.status === gameStates.playing  || game.status === gameStates.nogame || game.status === gameStates.top10updated || game.status === gameStates.waiting) {
       game = Object.assign({}, reset, {red_name, blue_name, status: gameStates.waiting});
-    }
   }
 
   function startGame(){
@@ -49,39 +47,54 @@ function init() {
   }
 
   function playerReady(color){
-    if(game.status === gameStates.waiting){
+    if(game.status === gameStates.waiting || game.status === gameStates.nogame){
       game[color + '_ready'] = !game[color +'_ready'] ;
     }
     if(game.red_ready && game.blue_ready) {
       game.status = gameStates.playing;
     }
+    if(game.status === gameStates.playing) {
+      if(game[color] > 0){
+        game[color] = game[color] -1;
+      }
+    }
   }
 
   function goal(color){
+    let result = {code: 0, gameType: 'regular'};
     if(game.status === gameStates.playing) {
       game[color] += 1;
     }
+    if(game.red_name === 'red' && game.blue_name === 'blue'){
+      result.gameType = 'dummy';
+    }
     if(Math.max(game.red, game.blue) === 10 && game.status === gameStates.playing) {
       game.winner = (game.blue === 10) ? game.blue_name : game.red_name;
-      gameStates.over = 'The winner is ' + game.winner +  '. Top10 list has been updated.';
+      gameStates.over = 'The winner is ' + game.winner +  '!';
       game.status = gameStates.over;
-      return 10;
+      result.code = 10;
+      return result;
     }
     if(Math.max(game.red, game.blue) === 10 && game.status !== gameStates.playing) {
-      return 20;
+      result.code = 20;
+      return result;
     }
-
-    return 0;
+    if(Math.max(game.red, game.blue) !== 10) {
+      result.code = 0;
+      return result;
+    }
   }
 
   function getGame(){
     return game;
   }
 
-  function finishGame(){
+  function finishGame(gameType){
     if(game.status === gameStates.over) {
-      db.addGame(game.red_name, game.blue_name, game.red, game.blue);
-      game.status = gameStates.top10updated;
+      if(gameType === 'regular') {
+        db.addGame(game.red_name, game.blue_name, game.red, game.blue);
+        game.status = gameStates.top10updated;
+      } 
     }
   }
 
