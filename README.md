@@ -2,9 +2,20 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.2.2.
 
-## How to start the project on different computer
+## Generally
 
-1) Clone the project into an empty folder
+In general we can split the Wuzzler app into three different apps. Every app has it's own task but it is necessary that all three apps are working, otherwise you would not be able to play correctly. 
+
+First of all there is the client which is a user interface to create a new user as well as challenge your friends into a 1 vs. 1 at tabletop soccer. If you wanna challenge your friends you have to create your own user and login. Then you are able to see all players which are available and logged in as well. 
+
+The next app we are going to talk is called display. The display app shows the current result of the two players which are playing tabletop soccer at the time on a TV that is also included in the cafetaria. As well as the result that is shown, after a game finished you are able to see a high-score list of all Users that played tabletop soccer after logging in. 
+
+Last but not least there is the backend. The backend is responsible for all things that happens in background. Saving data from a user or a game as well as communicating with the database.
+
+
+## How to install the project on another computer
+
+1) Clone the git project into an empty folder
 
 2) Navigate into "backend" folder and run "npm install" in terminal
 
@@ -33,6 +44,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 14) In row 8: Change "Password" to the database related password you chose. 
 
 15) Go into folder "client" and run "npm run dev" in terminal to start the server. The app will automatically navigate to your localhost website. 
+
 
 ## Development server
 
