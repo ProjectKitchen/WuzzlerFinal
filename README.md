@@ -43,8 +43,9 @@ Last but not least there is the backend. The backend is responsible for all thin
 
 14) In row 8: Change "Password" to the database related password you chose. 
 
-15) Go into folder "client" and run "npm run dev" in terminal to start the server. The app will automatically navigate to your localhost website. 
+15) Go into folder "client" and run "npm run dev" in terminal to start the server.
 
+16) "Npm run dev" leads to that all three apps will start automatically. The Client and Display will open in a Webbrowser and the Backend will start the server and connect to the database.  
 
 ## Development server
 
