@@ -51,3 +51,9 @@ Last but not least there is the backend. The backend is responsible for all thin
 
 Run `npm run dev` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
+## Related Work
+
+There is a project that already were made in 2014/15 from another student from FH Technikum Wien. You can follow the link to his work, right down below. 
+
+https://github.com/ProjectKitchen/TabletopSoccer
+
