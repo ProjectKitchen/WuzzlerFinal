@@ -63,12 +63,12 @@ export class WuzzlerService {
         setTimeout( () => {
           this.router.navigateByUrl('/');
         }, 5000);
-      }
+      }*/
       if(res.red_ready && res.blue_ready && this.screenstatus === 'top10screen') {
         console.log('switched to status')
         this.router.navigateByUrl('/status');
         this.screenstatus = 'statusscreen';
-      }  */
+      }  
 
     });
 
@@ -78,6 +78,14 @@ export class WuzzlerService {
       localStorage.setItem('top10', JSON.stringify(res));
     });
 
+    this.socketService.listen('switchToTop10').subscribe( res => {
+      if(this.screenstatus !== 'top10screen') {
+        this.router.navigateByUrl('/');
+        this.screenstatus = 'top10screen';
+      } 
+    });
+
+    
   }
 
   goal(color){

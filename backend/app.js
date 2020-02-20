@@ -192,21 +192,21 @@ io.on('connection', socket => {
      //console.log(gameM.getGame());
      //console.log(info);
      //socketEcho('gameUpdate', gameM.getGame(), 'OUT');
-     io.sockets.emit('gameUpdate', gameM.getGame());
      if(info.code === 10 && info.gameType === 'dummy'){
        gameM.finishGame(info.gameType);
+       io.sockets.emit('gameUpdate', gameM.getGame());
        setTimeout(() => {
          let ngames = challengeM.getData().upcomingGames.length;
-         console.log(ngames);
          if(ngames === 0) {
            gameM.resetGame();
          } else {
            gameM.setGame(challengeM.getData().upcomingGames[0].red, challengeM.getData().upcomingGames[0].blue);
          }
-         // socketEcho('gameUpdate', gameM.getGame(), 'OUT');
+        // socketEcho('gameUpdate', gameM.getGame(), 'OUT');
+        // socketEcho('challengeUpdate', challengeM.getData(), 'OUT');
          io.sockets.emit('gameUpdate', gameM.getGame());
-         // socketEcho('challengeUpdate', challengeM.getData(), 'OUT');
          io.sockets.emit('challengeUpdate', challengeM.getData());
+         io.sockets.emit('switchToTop10', null)
        }, 7000);
      }
      if(info.code === 10 && info.gameType === 'regular'){
@@ -228,7 +228,11 @@ io.on('connection', socket => {
           io.sockets.emit('gameUpdate', gameM.getGame());
         // socketEcho('challengeUpdate', challengeM.getData(), 'OUT');
           io.sockets.emit('challengeUpdate', challengeM.getData());
+          io.sockets.emit('switchToTop10', null);
         }, 7000);
+      }
+      if(info.code === 0 && gameM.getGame().status === 'Game in progress!') {
+        io.sockets.emit('gameUpdate', gameM.getGame());
       }
     }
   })
