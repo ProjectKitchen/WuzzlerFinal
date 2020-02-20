@@ -28,6 +28,7 @@ export class WuzzlerService {
     status:      "nogame",
     winner:     null
   }; 
+  screenstatus: string = 'top10screen'; ///statusscreen
 
   constructor(
     private socketService: SocketService,
@@ -55,17 +56,26 @@ export class WuzzlerService {
     });
 
     this.socketService.listen("gameUpdate").subscribe( res => {
+      console.log(res);
       this.gameSubject.next(res);
       localStorage.setItem('game', JSON.stringify(res));
+      /* if ((this.game.status === 'There is no game waiting.'|| this.game.status === 'Waiting to start the game.') && this.screenstatus==='statusscreen'  ) {
+        setTimeout( () => {
+          this.router.navigateByUrl('/');
+        }, 5000);
+      }
+      if(res.red_ready && res.blue_ready && this.screenstatus === 'top10screen') {
+        console.log('switched to status')
+        this.router.navigateByUrl('/status');
+        this.screenstatus = 'statusscreen';
+      }  */
+
     });
 
     this.socketService.listen("top10update").subscribe( res => {
+      console.log('top10 update received')
       this.top10Subject.next(res);
       localStorage.setItem('top10', JSON.stringify(res));
-      this.router.navigateByUrl('/top10');
-      setTimeout(() => {
-        this.router.navigateByUrl('/');
-      }, 5000)
     });
 
   }
@@ -74,8 +84,8 @@ export class WuzzlerService {
     this.socketService.emit('goal', color);
   }
 
-  playerReady(color){
-    this.socketService.emit('playerReady', color);
+  buttonClick(color){
+    this.socketService.emit('buttonClick', color);
   }
 
   getTop10(){

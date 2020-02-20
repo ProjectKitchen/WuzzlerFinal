@@ -1,8 +1,8 @@
 <div class="nav-bar">
   <nav class="navbar navbar-expand navbar-dark bg-dark">
     <div class="navbar-nav">
-      <a class="nav-item nav-link" routerLink="/">Game</a>
-      <a class="nav-item nav-link" routerLink="/top10" >Top 10</a>
+      <a class="nav-item nav-link" routerLink="/status" (click)="updateScreenStatus('statusscreen')">Game</a>
+      <a class="nav-item nav-link" routerLink="/" (click)="updateScreenStatus('top10screen')">Top 10</a>
     </div>
   </nav>
 </div>

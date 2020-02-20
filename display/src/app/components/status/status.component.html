@@ -1,7 +1,7 @@
 <div id="mainrow">
   <div class="row">
     <div class="message-side small-2 text-center col">
-      <div class="center-vertical">press button to start</div>
+      <div class="center-vertical">{{wuzzlerService.game.red_ready ? "" : "press button to start"}}</div>
     </div>
     <div class="small-6 small-offset-1 text-center col">
       <div class="row">
@@ -14,12 +14,12 @@
           </div>
       </div> 
       <div class="row">
-        <div (click)="wuzzlerService.playerReady('red')" [ngClass]="{'greenFrame': wuzzlerService.game.red_ready}" id="name-red" class="name small-5 col border-4">{{wuzzlerService.game.red_name}}</div>
-        <div (click)="wuzzlerService.playerReady('blue')" [ngClass]="{'greenFrame': wuzzlerService.game.blue_ready}" id="name-blue" class="name small-offset-2 small-5 col border-4">{{wuzzlerService.game.blue_name}}</div>
+        <div (click)="wuzzlerService.buttonClick('red')" [ngClass]="{'greenFrame': wuzzlerService.game.red_ready}" id="name-red" class="name small-5 col border-4">{{wuzzlerService.game.red_name}}</div>
+        <div (click)="wuzzlerService.buttonClick('blue')" [ngClass]="{'greenFrame': wuzzlerService.game.blue_ready}" id="name-blue" class="name small-offset-2 small-5 col border-4">{{wuzzlerService.game.blue_name}}</div>
       </div>
     </div>
     <div class="message-side small-2 text-center col">
-      <div class="center-vertical">press button to start</div>
+      <div class="center-vertical">{{wuzzlerService.game.blue_ready ? "" : "press button to start"}}</div>
       <div class="center-vertical"></div>
     </div>
   </div> 

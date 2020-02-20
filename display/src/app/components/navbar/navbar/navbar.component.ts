@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { WuzzlerService } from 'src/app/_services/wuzzlerService/wuzzler.service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor() { }
+  constructor(private wuzzlerService: WuzzlerService) { }
 
   ngOnInit() {
+  }
+
+  updateScreenStatus(status: string) {
+    this.wuzzlerService.screenstatus = status;
+    console.log(this.wuzzlerService.screenstatus);
   }
 
 }

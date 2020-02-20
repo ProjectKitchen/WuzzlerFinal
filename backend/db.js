@@ -5,7 +5,7 @@ function log(msg){
 }
  
 exports.init = function(conf){
-    var conString = "postgres://postgres:Password@localhost:5432/wuzzler_db";
+    var conString = "postgres://postgres:Passwort07@localhost:5432/wuzzler_db";
     var client = new pg.Client(conString);
 
     client.connect(function(err) {

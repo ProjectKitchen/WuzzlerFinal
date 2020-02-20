@@ -5,8 +5,8 @@ import { StatusComponent } from './components/status/status.component';
 
 
 const appRoutes: Routes = [
-  { path: "", component: StatusComponent},
-  { path: "top10", component: TableComponent },
+  { path: "", component: TableComponent},
+  { path: "status", component: StatusComponent },
   { path: "**", redirectTo: "" }
 ];
 

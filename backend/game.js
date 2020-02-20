@@ -48,15 +48,16 @@ function init() {
 
   function playerReady(color){
     if(game.status === gameStates.waiting || game.status === gameStates.nogame){
-      game[color + '_ready'] = !game[color +'_ready'] ;
+      game[color + '_ready'] =  true ;
     }
     if(game.red_ready && game.blue_ready) {
       game.status = gameStates.playing;
     }
-    if(game.status === gameStates.playing) {
-      if(game[color] > 0){
-        game[color] = game[color] -1;
-      }
+  }
+
+  function revokeGoal(color){
+    if(game[color] > 0){
+      game[color] = game[color] -1;
     }
   }
 
@@ -105,7 +106,8 @@ function init() {
     goal: goal,
     playerReady: playerReady,
     finishGame: finishGame,
-    getGame: getGame
+    getGame: getGame,
+    revokeGoal: revokeGoal
 
   }
 
