@@ -5,14 +5,20 @@ const settings = {
 
 const gameStates = {
   waiting: 'Waiting to start the game.',
-  nogame: 'There is no game waiting.',
+  nogame: 'Login or start offline game!',
   playing: 'Game in progress!',
-  revoke: 'Press button if goal was invalid!',  
-  over: 'Game is over!',
-  top10updated: 'Top10 list has been updated.'
+  revoke: 'Press button to revoke if invalid goal!',  
 };
+
+const gameInfo = {
+  localGame: 'local',
+  onlineGame: 'online',
+  gameOngoing: 'gameOngoing', 
+  gameWon: 'gameWon' 
+}
 
 module.exports = {
   settings,
-  gameStates
+  gameStates,
+  gameInfo
 }

@@ -61,7 +61,7 @@ var robot = Cylon.robot({
 
      /*
       if(Date.now()/1000 > lastPressTimeBlue + intervall){
-        socket.emit('cancelGame');
+        socket.emit('cancelLocalGame');
       } */
     });
  
@@ -123,7 +123,7 @@ var robot = Cylon.robot({
    ledOn: function (data) {
      if (arduinoMega) { 
        if (data=='red') arduinoMega.ledRed.turnOn(); 
-       else if (data=='blue') arduinoMega.ledRed.turnOn();
+       else if (data=='blue') arduinoMega.ledBlue.turnOn();
     }
    },
 
