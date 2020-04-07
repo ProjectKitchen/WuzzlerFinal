@@ -3,7 +3,9 @@ const gameM = require('./game').init();
 const challengeM = require('./challenge').init();
 const robot = require('./robot');
 const gameStates = require('./config/config').gameStates;
+const settings = require('./config/config').settings;
 const gameInfo = require('./config/config').gameInfo;
+var exec = require('child_process').exec;
 
 const cors = require('cors');
 const express = require('express');
@@ -18,6 +20,15 @@ io.origins('*:*');
 
 let lastRevokeTime = 1;
 
+function puts(error, stdout, stderr) { console.log(stdout) }
+
+function playSound(name,random_options){
+    selection = Math.round(Math.random()*random_options);
+    if (selection==0) selection=1;
+    soundfile_name="./wav/"+name+String(selection)+".wav";
+    console.log ("play sound " + soundfile_name);
+    exec("omxplayer "+soundfile_name, puts);
+}
 
 function socketEcho(eventName, data, type) {
   let txt = (type === 'IN') ? '" received with the following data:' : '" emitted with the following data:';
@@ -182,6 +193,7 @@ io.on('connection', socket => {
   })
 
   socket.on('goal', data => {
+    playSound(settings.goalSoundPrefix,settings.goalSoundCount);
     console.log ("should we revoke? ");
     if (gameM.getGame().status == gameStates.playing && robot.getRevokeTime() ==0) {
       robot.startRevokePhase(data);      
@@ -204,6 +216,7 @@ io.on('connection', socket => {
     let info = gameM.goal(data);
     if(info.code === gameInfo.gameWon) {
       //socketEcho('gameUpdate', gameM.getGame(), 'OUT');
+      playSound(settings.winSoundPrefix,settings.winSoundCount);
       io.sockets.emit('gameUpdate', gameM.getGame());
 
       if (info.gameType === gameInfo.localGame){

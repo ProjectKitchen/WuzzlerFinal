@@ -1,6 +1,10 @@
 const settings = {
     revokeTime: 5,
-    goalsToWin: 5
+    goalsToWin: 5,
+    goalSoundPrefix: "applause",
+    goalSoundCount: 5,    
+    winSoundPrefix: "cheer",
+    winSoundCount: 2    
   }
 
 const gameStates = {
