@@ -1,59 +1,48 @@
-# Wuzzler
-
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.2.2.
-
-## Generally
-
-In general we can split the Wuzzler app into three different apps. Every app has it's own task but it is necessary that all three are working, otherwise you would not be able to play correctly. 
-
-First of all there is the client which is a user interface to create a new user as well as challenge your friends into a 1 vs. 1 at tabletop soccer. If you wanna challenge your friends you have to create your own user and login. After that you are able to see all players which are available and logged in as well. 
-
-The next app we are going to talk is called display. The display app shows the current result of the two players which are playing tabletop soccer at the time on a TV that is also included in the cafetaria. As well as the result that is shown, after a game finished you are able to see a high-score list of all users that played tabletop soccer after logging in. 
-
-Last but not least there is the backend. The backend is responsible for all things that happens in background. Saving data from a user or a game as well as communicating with the database. The backend is also responsible for communicating with the Arduino which is necessary because the Arduino can tell if someone scored a goal or is pressing a button on the table. 
+# Wuzzler for FHTW Mensa
 
 
-## How to install the project on another computer
+The Smart Wuzzler is an augmented Tabletop-Soccer Game for the student restaurant of the University of Applied Sciences Technikum Wien. It features automatic goal counts, game session management via smart phone user login, audio-visual feedback of game progress and a high score list.
 
-1) Clone the git project into an empty folder
+## Credits
 
-2) Navigate into "backend" folder and run "npm install" in terminal
+This project is based upon the work by [Alexander Peters] (https://github.com/ProjectKitchen/TabletopSoccer/tree/master/documentation) who had the initial idea and made the first implementation in 2017, and [Ferdinand Unger] (https://github.com/FerdinandUnger/WuzzlerFinal) who ported the project to a recent version of node.js and Angular.js.
 
-3) Navigate into "display" folder and run "npm install" in terminal
+## Architecture and tools
 
-4) Navigate into "client" folder and run "npm install" in terminal
+The Tabletop-Soccer game implementation consists of 3 parts, which are built using node.js (Version 12.13.1). The backend (server) connects to a Postgres database to stor user and dame session data. The graphical frontends (client and display) use and [Angular CLI](https://github.com/angular/angular-cli) version 8.2.2. 
 
-5) Download the newest Version of PostgreSQL. 
+* The Backend: connects to the database and to the low level hardware (via Cylon/Firmata, expects an Arduino with Firmata firmware running at por /dev/ttyUSB0). The GPIO pin connection for goal detection and pushbutton can be found in file "robot.js". The backend detects goals and user interaction (pushbutton presses) and updates the game state logic for client and display. 
+* The Client: offers a responsive user interface in the web browser in order to create a new user, login, as well as challenge your friends into a 1 vs. 1 at tabletop soccer. The available players are displayed and can be challenged. 
+* The Display: shows the progress of ongoing games and the high score list on a TV that is mounted behind the soccer table. 
 
-6) Create a Database called "wuzzler_db". If you don't know how to start a Database in PostgreSQL. Follow the steps in this link. https://www.guru99.com/postgresql-create-database.html
 
-7) Open the App pgAdmin. Enter a password YOU choose. 
+## Installation and build procedure
 
-8) Open the Database you already made. 
+1) Clone the git repository
 
-9) Enter another Database related password.
+1) Navigate to "client" folder and run "npm install" in terminal
 
-10) Press right click on your Database and CREATE Script. 
+2) Navigate to "display" folder and run "npm install" in terminal
 
-11) Delete everything what is inside the script and start to install all scripts from file "wuzzlerFinal/backend/wuzzler_db.sql"
+3) Navigate to "backend" folder and run "npm install" in terminal
 
-12) Create only one table after another e.g.: CREATE TABLE users(); and press "lightning" button in the menu bar.
+5) Create the database 
 
-13) After creating all tables from the "wuzzler_db.sql" file, open file "wuzzlerFinal/backend/db.js".
+* Download and install the newest version of PostgreSQL. 
 
-14) In row 8: Change "Password" to the database related password you chose. 
+* Run following commands to create the database user and the wuzzler_db database, using the postgres tool:  
 
-15) Go into folder "client" and run "npm run dev" in terminal to start the server.
+   ```
+   sudo su postgres  
+   createuser pi -P -s  (then input and confirm password 'raspberry')  
+   createdb wuzzler_db  
+   psql wuzzler_db -f wuzzler_db_9.1.sql  
+   ```
 
-16) "Npm run dev" leads to that all three apps will start automatically. The Client and Display will open in a Webbrowser and the Backend will start the server and connect to the database.  
+* exit the postgres tool
 
-## Development server
+* Optional: you can use the pgAdmin tool to graphically manage the database (see e.g. [here] (https://www.guru99.com/postgresql-create-database.html) for details)
 
-Run `npm run dev` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+6) Open the file "db.js" with a text editor. In row 8: Change "Password" to the database-related password you chose. 
 
-## Related Work
-
-There is a project that already were made in 2014/15 from another student from FH Technikum Wien. You can follow the link to his work, right down below. 
-
-https://github.com/ProjectKitchen/TabletopSoccer
-
+7) Navigate to "client" folder and run "npm run dev" in terminal to start the server. All three apps will start automatically. Client and display should open in a webbrowser and the backend should connect to the database. The client is served from `http://localhost:4200/`
