@@ -15,7 +15,7 @@ The Tabletop-Soccer game implementation consists of 3 parts, which are built usi
 The backend (server) connects to a Postgres database to store user and game session data. 
 The graphical frontends (client and display) use and [Angular CLI](https://github.com/angular/angular-cli) version 8.2.2. 
 
-* The Backend: connects to the database and to the low level hardware (via Cylon/Firmata, expects an Arduino with Firmata firmware running at port /dev/ttyUSB0). The GPIO pin connections for goal detection and pushbuttons can be found in file "robot.js". The backend detects goals and user interaction and updates the game state for client and display accordingly. 
+* The Backend: connects to the database and to the low level hardware (via Cylon/Firmata, expects an Arduino with Firmata firmware running at port /dev/ttyACM0). The GPIO pin connections for goal detection and pushbuttons can be found in file "robot.js". The backend detects goals and user interaction and updates the game state for client and display accordingly. 
 * The Client: offers a responsive user interface in the web browser in order to create a new user, login, as well as challenge your friends into a 1 vs. 1 at tabletop soccer. The available players are displayed and can be challenged. 
 * The Display: shows the progress of ongoing games and the high score list on a TV that is mounted behind the soccer table. 
 
@@ -49,4 +49,8 @@ The graphical frontends (client and display) use and [Angular CLI](https://githu
 
 6) Open the file "db.js" with a text editor. In line 8: Change "Password" to the database-related password you chose. 
 
-7) Navigate to "client" folder and run "npm run dev" in terminal to start the server. All three apps will start automatically. Client and display should open in a webbrowser and the backend should connect to the database. The client is served from `http://localhost:4200/`
+7) Navigate to "client" folder and run "npm run dev" in terminal to start the server. All three apps will start automatically. Client and display should open in a webbrowser and the backend should connect to Arduino and database. 
+
+## IP, ports and connections
+The client content is served from `http://localhost:4200/`, multiple clients can connect to this port in order to show the user frontend. The display is served from `http://localhost:4220/`, it is shown in fullscreen (kiosk) mode by the RaspberryPi which also runs the backend. The backend listens on port 4444, where a websocket is used for communication to clients and display.
+
