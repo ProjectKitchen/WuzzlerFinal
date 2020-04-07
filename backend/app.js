@@ -1,10 +1,12 @@
 const db=require('./db').init();
 const gameM = require('./game').init();
 const challengeM = require('./challenge').init();
-const robot = require('./robot').robot;
-const getRevokeTime = require('./robot').getRevokeTime;
-const doRevoke = require('./robot').doRevoke;
-const toolconfig = require('./config/config');
+const robot = require('./robot');
+// const getRevokeTime = require('./robot').getRevokeTime;
+// const doRevoke = require('./robot').doRevoke;
+// const toolconfig = require('./config/config');
+// const settings = require('./config/config').settings;
+const gameStates = require('./config/config').gameStates;
 
 const cors = require('cors');
 const express = require('express');
@@ -19,14 +21,6 @@ io.origins('*:*');
 
 let lastRevokeTime = 1;
 
-const gameStates = {
-  waiting: 'Waiting to start the game.',
-  nogame: 'There is no game waiting.',
-  playing: 'Game in progress!',
-  revoke: 'Press button if goal was invalid!',  
-  over: 'Game is over!',
-  top10updated: 'Top10 list has been updated.'
-};
 
 function socketEcho(eventName, data, type) {
   let txt = (type === 'IN') ? '" received with the following data:' : '" emitted with the following data:';
@@ -190,14 +184,15 @@ io.on('connection', socket => {
 
   socket.on('goal', data => {
     console.log ("should we revoke? ");
-    if (gameM.getGame().status == gameStates.playing && getRevokeTime() ==0) {
-      io.sockets.emit('startRevokePhase', data);
-      
-      gameM.revokeGoal(data);
+    if (gameM.getGame().status == gameStates.playing && robot.getRevokeTime() ==0) {
+      robot.startRevokePhase(data);      
+      gameM.revokePhase(data);
       socketEcho('gameUpdate', gameM.getGame(), 'OUT');
       io.sockets.emit('gameUpdate', gameM.getGame());
   
-    } else console.log ("no game running!");
+    } else { 
+      console.log ("no game running!");
+    }
   });
   
   socket.on('goalAccept', data => {
@@ -215,6 +210,8 @@ io.on('connection', socket => {
        let ngames = challengeM.getData().upcomingGames.length;
        if(ngames === 0) {
          gameM.resetGame();
+         robot.ledOn('red');
+         robot.ledOn('blue');
        } else {
          gameM.setGame(challengeM.getData().upcomingGames[0].red, challengeM.getData().upcomingGames[0].blue);
        }
@@ -233,6 +230,8 @@ io.on('connection', socket => {
           gameM.setGame(challengeM.getData().upcomingGames[0].red, challengeM.getData().upcomingGames[0].blue);
         } else {
           gameM.resetGame();
+          robot.ledOn('red');
+          robot.ledOn('blue');
         }
         db.getTop10('all', res => {
           if(res.message === 'OK') {
@@ -253,9 +252,9 @@ io.on('connection', socket => {
   })
 
   socket.on('buttonClick', data => {
-    if(gameM.getGame().status === gameStates.revoke) {
+    if(gameM.getGame().status === gameStates.revoke  && robot.getRevokePlayer()==data) {
         console.log("Revoke false goal for "+ data);
-        doRevoke(data);
+        robot.doRevoke(data);
         // socketEcho('revokeGoal', data, 'IN');
         gameM.revokeDone(data);
         socketEcho('gameUpdate', gameM.getGame(), 'OUT');
@@ -264,6 +263,7 @@ io.on('connection', socket => {
      
     if(!gameM.getGame()[`${data}_ready`]) {
       socketEcho('playerReady', data, 'IN');
+      robot.ledOff(data);
       gameM.playerReady(data);
       socketEcho('gameUpdate', gameM.getGame(), 'OUT');
       io.sockets.emit('gameUpdate', gameM.getGame());
@@ -275,6 +275,8 @@ io.on('connection', socket => {
     let ngames = challengeM.removeGameByPlayers(data);
     if(ngames === 0) {
       gameM.resetGame();
+      robot.ledOn('red');
+      robot.ledOn('blue');
     } else {
       gameM.setGame(challengeM.getData().upcomingGames[0].red, challengeM.getData().upcomingGames[0].blue)
     }

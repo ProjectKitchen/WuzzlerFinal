@@ -1,8 +1,10 @@
 const db = require('./db').init();
-const toolconfig = require('./config/config');
+const settings = require('./config/config').settings;
+const gameStates = require('./config/config').gameStates;
 
 function init() {
 
+/*
   const gameStates = {
     waiting: 'Waiting to start the game.',
     nogame: 'There is no game waiting.',
@@ -11,6 +13,7 @@ function init() {
     over: 'Game is over!',
     top10updated: 'Top10 list has been updated.'
   };
+*/
 
   const reset = {
     red:        0,
@@ -57,7 +60,7 @@ function init() {
     }
   }
 
-  function revokeGoal(color){
+  function revokePhase(color){
       game.status = gameStates.revoke;
   }
 
@@ -73,8 +76,8 @@ function init() {
     if(game.red_name === 'red' && game.blue_name === 'blue'){
       result.gameType = 'dummy';
     }
-    if(Math.max(game.red, game.blue) === toolconfig.goalsToWin && game.status === gameStates.playing) {
-      game.winner = (game.blue === toolconfig.goalsToWin) ? game.blue_name : game.red_name;
+    if(Math.max(game.red, game.blue) === settings.goalsToWin && game.status === gameStates.playing) {
+      game.winner = (game.blue === settings.goalsToWin) ? game.blue_name : game.red_name;
       gameStates.over = 'The winner is ' + game.winner +  '!';
       game.status = gameStates.over;
       result.code = 10;
@@ -111,9 +114,8 @@ function init() {
     playerReady: playerReady,
     finishGame: finishGame,
     getGame: getGame,
-    revokeGoal: revokeGoal,
+    revokePhase: revokePhase,
     revokeDone: revokeDone
-
   }
 
 }
