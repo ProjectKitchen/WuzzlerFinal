@@ -10,14 +10,23 @@
 .greenFrame {
   border: 4px solid rgb(88, 173, 18);
 }
+
+.blink_me {
+  animation: blinker 2s linear infinite;
+}
+
+@keyframes blinker {  
+  50% { opacity: 0; }
+}
  
 #gamestatus {
   text-align: center;
-  font-size: large;
+  font-size: 3.0vw;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
-  color: whitesmoke;
+  color: #9ee5ff;
   display: block;
-  margin-left: 19.5vw;
+  max-width: 100%;
+  margin-left: 0.0vw;
 }
  
 #row1 {

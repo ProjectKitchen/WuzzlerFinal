@@ -14,7 +14,7 @@
           </div>
       </div> 
       <div class="row">
-        <div (click)="wuzzlerService.buttonClick('red')" [ngClass]="{'greenFrame': wuzzlerService.game.red_ready}" id="name-red" class="name small-5 col border-4">{{wuzzlerService.game.red_name}}</div>
+        <div (click)="wuzzlerService.buttonClick('red')" [ngClass]="{'greenFrame': wuzzlerService.game.red_ready}" id="name-red" class="name small-5 col border-6">{{wuzzlerService.game.red_name}}</div>
         <div (click)="wuzzlerService.buttonClick('blue')" [ngClass]="{'greenFrame': wuzzlerService.game.blue_ready}" id="name-blue" class="name small-offset-2 small-5 col border-4">{{wuzzlerService.game.blue_name}}</div>
       </div>
     </div>
@@ -23,7 +23,11 @@
       <div class="center-vertical"></div>
     </div>
   </div> 
-  <div class="row container container" id="gamestatus">
+  <div class="row"> 
+      &nbsp;
+  </div>
+  <div class="row container container blink_me" id="gamestatus">
       <span>{{wuzzlerService.game.status}}</span>
-    </div>
+  </div>
+  
 </div>
