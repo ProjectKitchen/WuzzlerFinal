@@ -1,4 +1,5 @@
 const db = require('./db').init();
+const toolconfig = require('./config/config');
 
 function init() {
 
@@ -6,6 +7,7 @@ function init() {
     waiting: 'Waiting to start the game.',
     nogame: 'There is no game waiting.',
     playing: 'Game in progress!',
+    revoke: 'Press button if goal was invalid!',
     over: 'Game is over!',
     top10updated: 'Top10 list has been updated.'
   };
@@ -56,9 +58,11 @@ function init() {
   }
 
   function revokeGoal(color){
-    if(game[color] > 0){
-      game[color] = game[color] -1;
-    }
+      game.status = gameStates.revoke;
+  }
+
+  function revokeDone(color){
+      game.status = gameStates.playing;
   }
 
   function goal(color){
@@ -69,8 +73,8 @@ function init() {
     if(game.red_name === 'red' && game.blue_name === 'blue'){
       result.gameType = 'dummy';
     }
-    if(Math.max(game.red, game.blue) === 10 && game.status === gameStates.playing) {
-      game.winner = (game.blue === 10) ? game.blue_name : game.red_name;
+    if(Math.max(game.red, game.blue) === toolconfig.goalsToWin && game.status === gameStates.playing) {
+      game.winner = (game.blue === toolconfig.goalsToWin) ? game.blue_name : game.red_name;
       gameStates.over = 'The winner is ' + game.winner +  '!';
       game.status = gameStates.over;
       result.code = 10;
@@ -107,7 +111,8 @@ function init() {
     playerReady: playerReady,
     finishGame: finishGame,
     getGame: getGame,
-    revokeGoal: revokeGoal
+    revokeGoal: revokeGoal,
+    revokeDone: revokeDone
 
   }
 

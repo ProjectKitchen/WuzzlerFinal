@@ -1,7 +1,9 @@
 const db=require('./db').init();
 const gameM = require('./game').init();
 const challengeM = require('./challenge').init();
-const robot = require('./robot');
+const robot = require('./robot').robot;
+const getRevokeTime = require('./robot').getRevokeTime;
+const doRevoke = require('./robot').doRevoke;
 const toolconfig = require('./config/config');
 
 const cors = require('cors');
@@ -21,6 +23,7 @@ const gameStates = {
   waiting: 'Waiting to start the game.',
   nogame: 'There is no game waiting.',
   playing: 'Game in progress!',
+  revoke: 'Press button if goal was invalid!',  
   over: 'Game is over!',
   top10updated: 'Top10 list has been updated.'
 };
@@ -186,32 +189,45 @@ io.on('connection', socket => {
   })
 
   socket.on('goal', data => {
-    if(Date.now()/1000 > lastRevokeTime + toolconfig.revokeblock) {
+    console.log ("should we revoke? ");
+    if (gameM.getGame().status == gameStates.playing && getRevokeTime() ==0) {
+      io.sockets.emit('startRevokePhase', data);
+      
+      gameM.revokeGoal(data);
+      socketEcho('gameUpdate', gameM.getGame(), 'OUT');
+      io.sockets.emit('gameUpdate', gameM.getGame());
+  
+    } else console.log ("no game running!");
+  });
+  
+  socket.on('goalAccept', data => {
+    console.log ("goal for player "  + data);
      //socketEcho('goal', data, 'IN');
-     let info = gameM.goal(data);
-     //console.log(gameM.getGame());
-     //console.log(info);
-     //socketEcho('gameUpdate', gameM.getGame(), 'OUT');
-     if(info.code === 10 && info.gameType === 'dummy'){
-       gameM.finishGame(info.gameType);
+    gameM.revokeDone(data);
+    let info = gameM.goal(data);
+    //console.log(gameM.getGame());
+    //console.log(info);
+    //socketEcho('gameUpdate', gameM.getGame(), 'OUT');
+    if(info.code === 10 && info.gameType === 'dummy'){
+     gameM.finishGame(info.gameType);
+     io.sockets.emit('gameUpdate', gameM.getGame());
+     setTimeout(() => {
+       let ngames = challengeM.getData().upcomingGames.length;
+       if(ngames === 0) {
+         gameM.resetGame();
+       } else {
+         gameM.setGame(challengeM.getData().upcomingGames[0].red, challengeM.getData().upcomingGames[0].blue);
+       }
+      // socketEcho('gameUpdate', gameM.getGame(), 'OUT');
+      // socketEcho('challengeUpdate', challengeM.getData(), 'OUT');
        io.sockets.emit('gameUpdate', gameM.getGame());
-       setTimeout(() => {
-         let ngames = challengeM.getData().upcomingGames.length;
-         if(ngames === 0) {
-           gameM.resetGame();
-         } else {
-           gameM.setGame(challengeM.getData().upcomingGames[0].red, challengeM.getData().upcomingGames[0].blue);
-         }
-        // socketEcho('gameUpdate', gameM.getGame(), 'OUT');
-        // socketEcho('challengeUpdate', challengeM.getData(), 'OUT');
-         io.sockets.emit('gameUpdate', gameM.getGame());
-         io.sockets.emit('challengeUpdate', challengeM.getData());
-         io.sockets.emit('switchToTop10', null)
-       }, 7000);
-     }
-     if(info.code === 10 && info.gameType === 'regular'){
-      gameM.finishGame(info.gameType);
-      setTimeout(() => {
+       io.sockets.emit('challengeUpdate', challengeM.getData());
+       io.sockets.emit('switchToTop10', null)
+     }, 7000);
+    }
+    if(info.code === 10 && info.gameType === 'regular'){
+    gameM.finishGame(info.gameType);
+    setTimeout(() => {
         let ngames = challengeM.removeGame();
         if(ngames > 0){
           gameM.setGame(challengeM.getData().upcomingGames[0].red, challengeM.getData().upcomingGames[0].blue);
@@ -225,36 +241,33 @@ io.on('connection', socket => {
           }
         })
         // socketEcho('gameUpdate', gameM.getGame(), 'OUT');
-          io.sockets.emit('gameUpdate', gameM.getGame());
-        // socketEcho('challengeUpdate', challengeM.getData(), 'OUT');
-          io.sockets.emit('challengeUpdate', challengeM.getData());
-          io.sockets.emit('switchToTop10', null);
-        }, 7000);
-      }
-      if(info.code === 0 && gameM.getGame().status === 'Game in progress!') {
         io.sockets.emit('gameUpdate', gameM.getGame());
-      }
+        // socketEcho('challengeUpdate', challengeM.getData(), 'OUT');
+        io.sockets.emit('challengeUpdate', challengeM.getData());
+        io.sockets.emit('switchToTop10', null);
+      }, 7000);
+    }
+    if(info.code === 0 && gameM.getGame().status === gameStates.playing) {
+      io.sockets.emit('gameUpdate', gameM.getGame());
     }
   })
 
   socket.on('buttonClick', data => {
-    if(gameM.getGame().red_ready && gameM.getGame().blue_ready && gameM.getGame().status === 'Game in progress!') {
-      if(Date.now()/1000 > lastRevokeTime + toolconfig.revokeblock) {
-        console.log("I am revoking");
-        lastRevokeTime = Math.floor(Date.now()/1000);
-        socketEcho('revokeGoal', data, 'IN');
-        gameM.revokeGoal(data);
+    if(gameM.getGame().status === gameStates.revoke) {
+        console.log("Revoke false goal for "+ data);
+        doRevoke(data);
+        // socketEcho('revokeGoal', data, 'IN');
+        gameM.revokeDone(data);
         socketEcho('gameUpdate', gameM.getGame(), 'OUT');
         io.sockets.emit('gameUpdate', gameM.getGame());
-      }
     }
+     
     if(!gameM.getGame()[`${data}_ready`]) {
       socketEcho('playerReady', data, 'IN');
       gameM.playerReady(data);
       socketEcho('gameUpdate', gameM.getGame(), 'OUT');
       io.sockets.emit('gameUpdate', gameM.getGame());
     }
-
   })
 
   socket.on('cancelGame', data => {
