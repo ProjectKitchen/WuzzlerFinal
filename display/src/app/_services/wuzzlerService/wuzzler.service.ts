@@ -64,8 +64,9 @@ export class WuzzlerService {
           this.router.navigateByUrl('/');
         }, 5000);
       }*/
-      if(res.red_ready && res.blue_ready && this.screenstatus === 'top10screen') {
-        console.log('switched to status')
+      
+      if (((res.red_ready && res.blue_ready) || (res.red_name !='red' && res.blue_name != 'blue')) && (this.screenstatus === 'top10screen')) {
+        console.log('switched to status');
         this.router.navigateByUrl('/status');
         this.screenstatus = 'statusscreen';
       }  
