@@ -25,8 +25,11 @@ var robot = Cylon.robot({
 
 
   work: function(hwConnection) {
-    let lastPressTimeRed = 1;
-    let lastPressTimeBlue = 1;
+    let lastPressTimeRed = 0;
+    let lastPressTimeBlue = 0;
+    let timeToCancelGame = 0;
+    let firstRedPush=1;
+    let firstBluePush=1;
     const intervall = 5;
     
   /*  every((0.5).second(), function() {
@@ -40,29 +43,52 @@ var robot = Cylon.robot({
     arduinoMega.ledRed.turnOn();
     arduinoMega.ledBlue.turnOn();
        
-    arduinoMega.buttonRed.on('press', function(){
-      lastPressTimeRed = Math.floor(Date.now()/1000);
-    });
-
-    arduinoMega.buttonBlue.on('press', function(){
-      lastPressTimeBlue = Math.floor(Date.now()/1000);
-    });
-
     arduinoMega.buttonRed.on('release', function(){
-      console.log("buttonRed pushed");
-      if (revokeTime>0) {
-      }
-      socket.emit('buttonClick', 'red');
+      lastPressTimeRed = Math.floor(Date.now()/1000);
+      if (lastPressTimeBlue > 0) {
+         console.log("hold both buttons for 3 seconds to cancel game!");
+         timeToCancelGame=lastPressTimeRed+3;
+      } 
+      else timeToCancelGame=0;
     });
 
     arduinoMega.buttonBlue.on('release', function(){
-      console.log("buttonBlue pushed");
-      socket.emit('buttonClick', 'blue');
+      lastPressTimeBlue = Math.floor(Date.now()/1000);
+      if (lastPressTimeRed > 0) {
+         console.log("hold both buttons for 3 seconds to cancel game! ");
+         timeToCancelGame=lastPressTimeBlue+3;
+      }
+      else timeToCancelGame=0;
+    });
 
-     /*
-      if(Date.now()/1000 > lastPressTimeBlue + intervall){
-        socket.emit('cancelLocalGame');
-      } */
+    arduinoMega.buttonRed.on('push', function(){
+      if (firstRedPush==1) { firstRedPush=0; return;}
+      lastPressTimeRed =0;
+      if ((timeToCancelGame>0) && (Math.floor(Date.now()/1000) >= timeToCancelGame)) {
+         timeToCancelGame=0;
+         firstBluePush=1;
+         console.log(" *** CANCEL GAME ***");
+         // socket.emit('cancelLocalGame');         
+      }
+      else {
+        console.log("buttonRed pushed");
+        socket.emit('buttonClick', 'red');
+      }
+    });
+
+    arduinoMega.buttonBlue.on('push', function(){
+      if (firstBluePush==1) { firstBluePush=0; return;}
+      lastPressTimeBlue =0;
+      if ((timeToCancelGame>0) && (Math.floor(Date.now()/1000) >= timeToCancelGame)) {
+         timeToCancelGame=0;
+         firstRedPush=1;
+         console.log(" *** CANCEL GAME ***");
+         // socket.emit('cancelLocalGame');         
+      }
+      else {
+        console.log("buttonBlue pushed");
+        socket.emit('buttonClick', 'blue');
+      }
     });
  
     arduinoMega.goalRed.on('release', function () {

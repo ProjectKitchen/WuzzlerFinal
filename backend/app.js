@@ -19,6 +19,7 @@ const io = socketIO(server);
 io.origins('*:*');
 
 let lastRevokeTime = 1;
+let actsound
 
 function puts(error, stdout, stderr) { console.log(stdout) }
 
@@ -27,7 +28,11 @@ function playSound(name,random_options){
     if (selection==0) selection=1;
     soundfile_name="./wav/"+name+String(selection)+".wav";
     console.log ("play sound " + soundfile_name);
-    exec("omxplayer "+soundfile_name, puts);
+    if (actsound) {
+      console.log ("stop act sound");
+      actsound.kill();
+    }
+    actsound=exec("omxplayer "+soundfile_name, puts);
 }
 
 function socketEcho(eventName, data, type) {
@@ -58,10 +63,12 @@ io.on('connection', socket => {
 
   if(surveyID === 0){
     setInterval(() => {
+      console.log ("---> survey " + surveyID); 
       let send = false;
       let currentUsers = Object.keys(activeUsers);
       currentUsers.forEach(name => {
         if(activeUsers[name] <= surveyID-1){
+          console.log ("!!! DELETING USER: " + name +" ID= " + activeUsers[name] +" Survey=" + surveyID-1);
           delete activeUsers[name];
           challengeM.rejectChallenge(name);
           challengeM.cancelChallenge(name);
@@ -92,18 +99,22 @@ io.on('connection', socket => {
   } 
 
   socket.on('disconnect', (a) => {
-    socketEcho('disconnect', null, 'IN');
-    socketEcho('survey', surveyID, 'OUT');
-    io.sockets.emit('survey', surveyID);
-    surveyID += 1;
+    console.log ("!!! DISCONNECTION detected, Survey=" + surveyID);
+    // ignore the disconnection event, because this is sent when smartphones go into standby !!  (-> prevent user logout!)
+      // socketEcho('disconnect', null, 'IN');
+      // socketEcho('survey', surveyID, 'OUT');
+      // surveyID += 1;
+      // io.sockets.emit('survey', surveyID);
   })
 
   socket.on('surveyResponse', data => {
     socketEcho('surveyResponse', data, 'IN');
     if(data.user !== null) {
       if(activeUsers[data.user]) {
+        console.log ("!!! Updating SurveyID " + data.surveyID + " for user "+ data.user);
         activeUsers[data.user] = data.surveyID;
       } else {
+        console.log ("!!! User data not found, logout " + data.user);
         socketEcho('serverLogout', data.user, 'OUT');
         io.sockets.emit('serverLogout', data.user);
       }
@@ -193,9 +204,9 @@ io.on('connection', socket => {
   })
 
   socket.on('goal', data => {
-    playSound(settings.goalSoundPrefix,settings.goalSoundCount);
     console.log ("should we revoke? ");
     if (gameM.getGame().status == gameStates.playing && robot.getRevokeTime() ==0) {
+      playSound(settings.goalSoundPrefix,settings.goalSoundCount);
       robot.startRevokePhase(data);      
       gameM.revokePhase(data);
       socketEcho('gameUpdate', gameM.getGame(), 'OUT');
