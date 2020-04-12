@@ -82,9 +82,16 @@ export class ChallengeService {
   }
 
   cancelGame(gametext: string){
+    console.log ("User " + localStorage.getItem('currentUser') + " wants to cancel game " + gametext);
     const gameinfo = gametext.split(' vs. ');
-    let game = {red: gameinfo[0], blue: gameinfo[1]};
-    this.socketService.emit('cancelGame', game)
+    if (gameinfo[0] == localStorage.getItem('currentUser') || gameinfo[1] == localStorage.getItem('currentUser')) {
+      let game = {red: gameinfo[0], blue: gameinfo[1]};
+      this.socketService.emit('cancelGame', game);
+      console.log ("->  cancel game done! ");
+    } 
+    else {
+      console.log ("->  not allowed to cancel game! ");
+    }
   }
 
 }
