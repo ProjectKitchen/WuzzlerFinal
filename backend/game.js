@@ -2,6 +2,7 @@ const settings = require('./config/config').settings;
 const gameStates = require('./config/config').gameStates;
 const gameInfo = require('./config/config').gameInfo;
 
+
 function init() {
 
   const reset = {
@@ -14,18 +15,6 @@ function init() {
     status:     gameStates.nogame,
     winner:     null
   };
-
-  /*
-  let game = {
-    red:        0,
-    blue:       0,
-    red_name:   'red',
-    blue_name:  'blue',
-    red_ready:  false,
-    blue_ready: false,
-    status:      gameStates.nogame,
-    winner:     null
-  }; */
 
   let game = Object.assign({}, reset);
 
@@ -52,11 +41,15 @@ function init() {
     }
   }
 
-  function revokePhase(color){
+  function revokePhase(){
       game.status = gameStates.revoke;
   }
 
-  function revokeDone(color){
+  function abortPhase(){
+      game.status = gameStates.abort;
+  }
+
+  function playPhase(){
       game.status = gameStates.playing;
   }
 
@@ -88,7 +81,8 @@ function init() {
     playerReady: playerReady,
     getGame: getGame,
     revokePhase: revokePhase,
-    revokeDone: revokeDone
+    abortPhase: abortPhase,
+    playPhase: playPhase
   }
 
 }
