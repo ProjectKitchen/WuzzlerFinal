@@ -1,2 +1,2 @@
-# npm start
-http-server ./dist/wuzzler/
+npm start
+# http-server ./dist/wuzzler/
