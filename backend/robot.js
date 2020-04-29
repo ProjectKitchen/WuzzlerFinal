@@ -136,7 +136,7 @@ var robot = Cylon.robot({
 keypress(process.stdin);
 
 process.stdin.on('keypress', function (ch, key) {
-  // console.log('got "keypress"', key);
+  console.log('got "keypress"', key);
   if (key.name == 'y') {
     console.log('goal red');
     socket.emit('goal', 'red');
@@ -168,16 +168,22 @@ process.stdin.on('keypress', function (ch, key) {
 
   if (key.ctrl && key.name == 'c') {
     process.stdin.pause();
+    console.log('received Ctrl+C! Please press again to terminate backend!');
+    process.stdin.setRawMode(false);
+    process.stdin.resume();
+
   }
 
 });
  
 
-if (!arduinoMega) { 
-    socket.emit('buttonReleased', 'red'); 
-	socket.emit('buttonReleased', 'blue');
-}
-
+setTimeout(function () {
+  if (!arduinoMega) { 
+      console.log ("Arduino connection not established - please use keyboard (q,a,y/w,s,x) to emulate game actions!");
+      socket.emit('buttonReleased', 'red'); 
+      socket.emit('buttonReleased', 'blue');
+  } else {console.log ("Arduino connection established");}
+}, 5000);
  
 module.exports =  robot;
 
