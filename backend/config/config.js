@@ -14,6 +14,7 @@ const settings = {
     booSoundCount: 3,
     backgroundSoundPrefix: "bg",
     backgroundSoundCount: 5,    
+    startGameWhistleSound: "whistle1",
     endGameWhistleSound: "whistle2"
   }
 
