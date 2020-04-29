@@ -11,6 +11,7 @@ export class SocketService {
   readonly uri: string = "ws://localhost:4444";
 
   constructor() {
+    console.log("Platform detect:" + navigator.platform + "/" + navigator.userAgent);
     this.socket=io(this.uri)
   }
 
