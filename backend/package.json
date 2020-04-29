@@ -17,6 +17,7 @@
     "cylon-i2c": "^0.26.1",
     "express": "^4.17.1",
     "johnny-five": "^1.4.0",
+    "keypress": "^0.2.1",
     "pg": "^7.17.1",
     "python": "0.0.4",
     "socket.io": "^2.3.0"
