@@ -1,7 +1,8 @@
 
 var exec = require('child_process').exec;
 
-
+var player="omxplayer";
+if (process.platform == 'win32') player="cmdmp3.exe";
 
 function puts (error, stdout, stderr) { 
 	console.log(stdout); 
@@ -16,14 +17,16 @@ var sound = {
 		  soundfile_name="./wav/"+name+String(selection)+".wav";
 		} else soundfile_name="./wav/"+name+".wav";
 
-		console.log ("play sound " + soundfile_name);
-		omxplayer=exec("omxplayer "+soundfile_name); // , puts);
-		console.log("omxplayer pid="+omxplayer.pid);
+		console.log ("play sound:"+player+" " + soundfile_name);
+		playerProcess=exec(player+" "+soundfile_name); // , puts);
+		console.log("playerProcess pid="+playerProcess.pid);
 	}, 
     stopAllSounds: function () {
-		cmd="killall omxplayer.bin";
-		console.log ("stopped all ongoing sounds");
-		exec(cmd);
+		if (player=="cmdmp3.exe") 
+		    killcmd="taskkill /im cmdmp3.exe /f";
+		else killcmd="killall omxplayer.bin";
+		console.log ("stop all ongoing sounds:"+killcmd);
+		exec(killcmd);
 	}
 }
 
