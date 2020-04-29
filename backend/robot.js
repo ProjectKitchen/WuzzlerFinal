@@ -1,8 +1,16 @@
 var Cylon = require('cylon');
 const io = require('socket.io-client');
+var keypress = require('keypress');
 const settings = require('./config/config').settings;
 const socket = io('ws://localhost:4444');
+var exec = require('child_process').exec;
 let arduinoMega;
+
+var redPressed=false;
+var bluePressed=false;
+
+process.stdin.setRawMode(true);
+process.stdin.resume();
 
 var robot = Cylon.robot({
 
@@ -113,9 +121,63 @@ var robot = Cylon.robot({
        if (data=='red') return(arduinoMega.buttonRed.isPressed());    // pullup
        else if (data=='blue') return(arduinoMega.buttonBlue.isPressed());  // pullup
     }
+	else {                                        // switch emulation via keyboard
+       if (data=='red') return(!redPressed);         
+       else if (data=='blue') return(!bluePressed); 
+	}
+
    }
    
 }); 
+
+
+// use keypress events to emulate the microcontroller connection (for test purposes)
+
+keypress(process.stdin);
+
+process.stdin.on('keypress', function (ch, key) {
+  // console.log('got "keypress"', key);
+  if (key.name == 'y') {
+    console.log('goal red');
+    socket.emit('goal', 'red');
+  }
+  if (key.name == 'x') {
+    console.log('goal blue');
+    socket.emit('goal', 'blue');
+  }
+  if (key.name == 'a') {
+    console.log('button red released');
+	redPressed=false;
+    socket.emit('buttonReleased', 'red');
+  }
+  if (key.name == 's') {
+    console.log('button blue released');
+	bluePressed=false;
+    socket.emit('buttonReleased', 'blue');
+  }
+  if (key.name == 'q') {
+    console.log('button red pressed');
+	redPressed=true;
+    socket.emit('buttonPressed', 'red');
+  }
+  if (key.name == 'w') {
+    console.log('button blue pressed');
+	bluePressed=true;
+    socket.emit('buttonPressed', 'blue');
+  }
+
+  if (key.ctrl && key.name == 'c') {
+    process.stdin.pause();
+  }
+
+});
+ 
+
+if (!arduinoMega) { 
+    socket.emit('buttonReleased', 'red'); 
+	socket.emit('buttonReleased', 'blue');
+}
+
  
 module.exports =  robot;
 

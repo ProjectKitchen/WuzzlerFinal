@@ -278,6 +278,8 @@ function buttonClick (data)  {
       robot.ledOff(data);
       gameM.playerReady(data);
       socketEcho('gameUpdate', gameM.getGame(), 'OUT');
+	  sound.playSound(settings.startGameWhistleSound);
+	  
       io.sockets.emit('gameUpdate', gameM.getGame());
       if (gameM.getGame().status == gameStates.playing) {
         challengeM.removeGame();
@@ -427,4 +429,9 @@ console.log('robot started');
 
 server.listen(4444, function(){
   console.log('listening on *:4444');
+  console.log('Use keyboard to emulate button/sensor activity:');
+  console.log('q: press button red  / a: release button red  / y: goal red');
+  console.log('w: press button blue / s: release button blue / x: goal blue');
+  console.log('----------------------!have-fun!----------------------------');
+
 });
