@@ -8,10 +8,10 @@ import { Observable } from 'rxjs';
 
 export class SocketService {
   socket: any;
-//  readonly uri: string = 'ws://localhost:4444';
-  readonly uri: string = 'ws://192.168.42.1:4444';    // use  ip address of access point !
-
+  readonly uri: string = `ws://${window.location.hostname}:4444`
+  
   constructor() { 
+    console.log(this.uri);
     this.socket=io(this.uri)
   }
 
